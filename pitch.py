@@ -1,17 +1,19 @@
 from flask import Flask, render_template
 app = Flask(__name__)
 
+app.config['SECRET_KEY'] = ''
+
 posts = [
     {
         'author': 'leon bichanga',
-        'title': 'post no:1',
+        'title': 'pitch no:1',
         'content': 'First pitch ',
         'date_posted': 'September 20,2019'
 
     },
     {
         'author': 'Martha chitayi',
-        'title': 'post no:2',
+        'title': 'pitch no:2',
         'content': 'Second pitch ',
         'date_posted': 'September 21,2019'
     }
