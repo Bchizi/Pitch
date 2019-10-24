@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, abort,request
 from pitch import app, db, bcrypt
-from pitch.forms import RegistrationForm, LoginForm, PostForm
+from pitch.forms import RegistrationForm, LoginForm, PostForm,ResetPasswordForm,RequestResetForm
 from pitch.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -110,3 +110,11 @@ def delete_post(post_id):
     db.session.commit()
     flash('Your post has been deleted','success')
     return redirect(url_for('home'))
+
+@app.route("/reset_password", methods=["GET", "POST"])
+def reset_password():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    form = RequestResetForm()
+    return render_template('reset_request.html',title='Reset Password',form=form)
+    
