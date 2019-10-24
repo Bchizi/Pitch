@@ -36,3 +36,8 @@ You Require to install
 ### Contact Info
 
 leonbichanga@gmail.com
+## License
+
+this software license under MIT License
+
+Copyright (c) 2019 Leon Bichanga
