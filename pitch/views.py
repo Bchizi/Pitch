@@ -1,29 +1,17 @@
 from flask import render_template,url_for,flash,redirect
 from pitch import app,db,bcrypt
-from pitch.forms import RegistrationForm, LoginForm
+from pitch.forms import RegistrationForm, LoginForm, PostForm
 from pitch.models import User, Post
-from flask_login import login_user,current_user,logout_user
+from flask_login import login_user,current_user,logout_user,login_required
 
 
-posts = [
-    {
-        "author": "leon bichanga",
-        "title": "pitch no:1",
-        "content": "First pitch ",
-        "date_posted": "September 20,2019",
-    },
-    {
-        "author": "Martha chitayi",
-        "title": "pitch no:2",
-        "content": "Second pitch ",
-        "date_posted": "September 21,2019",
-    },
-]
+
 
 
 @app.route("/")
 @app.route("/home")
 def home():
+    posts=Post.query.all()
     return render_template("home.html", posts=posts)
 
 
@@ -68,3 +56,22 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+
+@app.route("/post/new", methods=['GET', 'POST'])
+@login_required
+def new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(title=form.title.data, content=form.content.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post has been created!', 'success')
+        return redirect(url_for('home'))
+    return render_template('create_post.html', title='New Post',
+                           form=form, legend='New Post')
+
+@app.route("/post/<int:post_id>")
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('post.html', title=post.title, post=post)
